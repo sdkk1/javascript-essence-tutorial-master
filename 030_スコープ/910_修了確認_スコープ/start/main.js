@@ -7,8 +7,9 @@
  * ※if文は削除してはいけません。
  */
 function fn() {
+    let a = '';
     if(true) {
-        let a = 'fn called';
+        a = 'fn called';
     }
     return a; // ReferenceError: a is not defined
 }
@@ -21,12 +22,12 @@ console.log(result);
  * fn2内の記述を変更して、各コンソールで
  * 期待値を出力するように修正してください。
  */
-var val = 'val1';
+const val = 'val1';
 function fn2() {
     console.log(val); // 期待値->'val1'
 
     if(true) {
-        var val = 'val2';
+        const val = 'val2';
         console.log(val); // 期待値->'val2'
     }
 
@@ -45,3 +46,16 @@ fn2();
  * increment(); // 期待値->3
  * increment(); // 期待値->4
  */
+
+{
+    let num = 0;
+    function increment() {
+        num++
+        console.log(num);
+    }
+}
+
+increment();
+increment();
+increment();
+increment();
