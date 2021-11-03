@@ -8,6 +8,8 @@
  * 
  */
 const KEY = 'test-data';
+const p = Promise.resolve();
+let _dirty;
 
 class DataSource {
 	static getLocal(KEY) {
@@ -27,10 +29,18 @@ const targetObj = DataSource.getLocal(KEY) || {};
 
 const pxy = new Proxy(targetObj, {
 	set(target, prop, value, receiver) {
+		_dirty = true;
+
 		const result = Reflect.set(target, prop, value, receiver);
 
-		DataSource.setLocal(KEY, target);
-		
+		p.then(() => {
+			if(_dirty) {
+				console.log('** update data **');
+				_dirty = false;
+				DataSource.setLocal(KEY, target);
+			}
+		});
+
 		return result;
 	}
 });

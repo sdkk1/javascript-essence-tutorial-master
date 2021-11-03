@@ -25,7 +25,61 @@ class IteratableObject {
 		console.log(`%c ${label}`, 'color: blue; font-weight: 600;', this);
 		return this;
 	}
+	set(key, value) {
+		this[key] = value;
+		return this;
+	}
+	forEach(callback) {
+		for(let [k, v] of this) {
+			callback(v, k, this);
+		}
 
+		/** for ...in で実装した場合 */
+		// for(let prop in this) {
+		// 	callback(this[prop], prop, this);
+		// }
+	}
+	map(callback) {
+		const newInstace = new IteratableObject();
+		for(let [k, v] of this) {
+			newInstace[k] = callback(v, k, this);
+		}
+		return newInstace;
+
+		/** for ...in で実装した場合 */
+		// const newInstance = new IteratableObject();
+		// for(let prop in this) {
+		// 	const result = callback(this[prop], prop, this);
+		// 	newInstance.set(prop, result);
+		// }
+		// return newInstance;
+	}
+	filter(callback) {
+		const newInstace = new IteratableObject();
+		for(let [k, v] of this) {
+			const result = callback(v, k, this);
+			if(result) {
+				newInstace[k] = v;
+			}
+		}
+		return newInstace;
+
+		/** for ...in で実装した場合 */
+		// const newInstance = new IteratableObject();
+		// for(let prop in this) {
+		// 	const result = callback(this[prop], prop, this);
+		// 	if(result) {
+		// 		newInstance.set(prop, this[prop]);
+		// 	}
+		// }
+		// return newInstance;
+	}
+
+	*[Symbol.iterator]() {
+		for(let key in this) {
+			yield [key, this[key]];
+		}
+	}
 }
 
 function prefix(v, i, obj) {
